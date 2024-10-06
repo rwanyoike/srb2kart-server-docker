@@ -1,13 +1,16 @@
 # Sonic Robo Blast 2 Kart Server
 
-[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/rwanyoike/srb2kart-server)](https://hub.docker.com/r/rwanyoike/srb2kart-server)
+[![GitHub Actions](https://img.shields.io/github/actions/workflow/status/rwanyoike/srb2kart-server-docker/docker-image.yml?branch=main)
+](https://github.com/rwanyoike/srb2kart-server-docker/actions/workflows/docker-image.yml?query=branch%3Amain)
+[![GitHub License](https://img.shields.io/github/license/rwanyoike/srb2kart-server-docker)
+](LICENSE.txt)
 [![Docker Image Version](https://img.shields.io/docker/v/rwanyoike/srb2kart-server)](https://hub.docker.com/r/rwanyoike/srb2kart-server)
 [![Docker Image Size](https://img.shields.io/docker/image-size/rwanyoike/srb2kart-server)](https://hub.docker.com/r/rwanyoike/srb2kart-server)
 
 > Containerized version of SRB2Kart.
 
 <p align="center">
-  <img src="https://cdn.discordapp.com/attachments/298839130144505858/512450353124343808/unknown.png" width="100%" alt="SRB2Kart">
+  <img src="./unknown.jpg" width="100%" alt="SRB2Kart">
 </p>
 
 Containerized version of [SRB2Kart](https://mb.srb2.org/showthread.php?t=43708), a kart racing mod based on the 3D Sonic the Hedgehog fangame [Sonic Robo Blast 2](https://srb2.org/), based on a modified version of [Doom Legacy](http://doomlegacy.sourceforge.net/). You can use SRB2Kart to run a SRB2Kart dedicated netgame server given the proper config.
@@ -37,7 +40,7 @@ srb2kart-myserver
 1 directory, 4 files
 ```
 
-> This directory must be accessible to the user account that is used to run SRB2Kart inside the container. If your host machine is run under *nix OS, SRB2Kart uses the non-root account `10001:10001` (`group:id`, respectively).
+> This directory must be accessible to the user account that is used to run SRB2Kart inside the container. If your host machine is run under *nix OS, SRB2Kart uses the non-root account `1000:1000` (`group:id`, respectively).
 
 ```bash
 docker run --rm -it --name srb2kart \

@@ -1,53 +1,48 @@
-FROM alpine:3.12
+FROM docker.io/library/alpine:3.20
 
-# Ref: https://github.com/STJr/Kart-Public/releases
-ARG SRB2KART_VERSION=1.3
+ARG SRB2KART_REPO=https://github.com/STJr/Kart-Public
+ARG SRB2KART_VERSION=v1.6
 ARG SRB2KART_USER=srb2kart
 
 # Ref: https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=srb2kart-data
 RUN set -ex \
-    && apk add --no-cache --virtual .build-deps curl \
-    && mkdir -p /srb2kart-data \
-    && curl -L -o /tmp/srb2kart-v${SRB2KART_VERSION//./}-Installer.exe https://github.com/STJr/Kart-Public/releases/download/v${SRB2KART_VERSION}/srb2kart-v${SRB2KART_VERSION//./}-Installer.exe \
-    && unzip -d /srb2kart-data /tmp/srb2kart-v${SRB2KART_VERSION//./}-Installer.exe \
-    && find /srb2kart-data/mdls -type d -exec chmod 0755 {} \; \
-    && mkdir -p /usr/share/games \
-    && mv /srb2kart-data /usr/share/games/SRB2Kart \
+    && apk add --no-cache -t .build-deps curl \
+    && _assets_file=/tmp/srb2kart-data_${SRB2KART_VERSION}.zip \
+    && _target_dir=/usr/local/share/games/SRB2Kart \
+    && curl -fL -o ${_assets_file} ${SRB2KART_REPO}/releases/download/${SRB2KART_VERSION}/AssetsLinuxOnly.zip \
+    && mkdir -p ${_target_dir} \
+    && unzip -d ${_target_dir} ${_assets_file} \
+    && find ${_target_dir}/mdls -type d -print -exec chmod 0755 {} \; \
+    && rm ${_assets_file} \
     && apk del .build-deps
 
 # Ref: https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=srb2kart
 RUN set -ex \
-    && apk add --no-cache --virtual .build-deps \
+    && apk add --no-cache -t .build-deps \
         bash \
+        build-base \
         curl-dev \
-        curl-static \
-        gcc \
         git \
-        gzip \
-        libc-dev \
+        libgme-dev \
         libpng-dev \
-        libpng-static \
-        make \
-        nghttp2-static \
-        openssl-libs-static \
         sdl2_mixer-dev \
         sdl2-dev \
-        sdl2-static \
-        upx \
-        zlib-dev \
-        zlib-static \
-    && git clone --depth=1 -b v${SRB2KART_VERSION} https://github.com/STJr/Kart-Public.git /srb2kart \
-    && (cd /srb2kart/src \
-        && make -j$(nproc) LINUX64=1 NOHW=1 NOGME=1 STATIC=1) \
-    && cp /srb2kart/bin/Linux64/Release/lsdl2srb2kart /usr/bin/srb2kart \
-    && apk del .build-deps \
-    && rm -rf /srb2kart
+    && _target_dir=/tmp/srb2kart_${SRB2KART_VERSION} \
+    && git clone --depth=1 -b ${SRB2KART_VERSION} ${SRB2KART_REPO} ${_target_dir} \
+    && (cd ${_target_dir}/src \
+        # NOUPX - Don't compress with UPX (speed up compiling)
+        # NOOBJDUMP - Don't dump symbols (speed up compiling)
+        # LINUX64 - Compile for x86_64 Linux
+        # NOHW - Disable OpenGL and OpenAL
+        && make -j$(nproc) NOUPX=1 NOOBJDUMP=1 LINUX64=1 NOHW=1) \
+    && cp ${_target_dir}/bin/Linux64/Release/lsdl2srb2kart /usr/bin/srb2kart \
+    && rm -rf ${_target_dir} \
+    && apk del .build-deps
 
-VOLUME /data
-
-RUN adduser -D -u 10001 ${SRB2KART_USER} \
-    && ln -s /data /home/${SRB2KART_USER}/.srb2kart \
-    && chown ${SRB2KART_USER} /data
+RUN adduser -D ${SRB2KART_USER} \
+    && mkdir /data \
+    && chown ${SRB2KART_USER}:${SRB2KART_USER} /data \
+    && ln -s /data /home/${SRB2KART_USER}/.srb2kart
 
 USER ${SRB2KART_USER}
 
