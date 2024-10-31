@@ -37,7 +37,7 @@ RUN set -ex \
     # NOHW - Disable OpenGL and OpenAL
     && make -j$(nproc) NOUPX=1 NOOBJDUMP=1 LINUX64=1 NOHW=1 \
     && cp ${_target}/bin/Linux64/Release/lsdl2srb2kart /usr/bin/srb2kart \
-    && rm -rf ${_target} \
+    && rm -r ${_target} \
     && apk del .build-deps
 
 RUN set -ex \
@@ -61,6 +61,4 @@ EXPOSE 5029/udp
 
 STOPSIGNAL SIGINT
 
-ENTRYPOINT ["srb2kart"]
-
-CMD ["-dedicated"]
+CMD ["srb2kart", "-dedicated"]

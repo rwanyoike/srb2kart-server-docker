@@ -10,14 +10,14 @@
 > Containerized version of SRB2Kart.
 
 <p align="center">
-  <img src="assets/unknown.jpg" width="100%" alt="SRB2Kart">
+  <img src="assets/unknown.jpg" alt="SRB2Kart">
 </p>
 
-Containerized version of [SRB2Kart](https://mb.srb2.org/showthread.php?t=43708), a kart racing mod based on the 3D Sonic the Hedgehog fangame [Sonic Robo Blast 2](https://srb2.org/), based on a modified version of [Doom Legacy](http://doomlegacy.sourceforge.net/). You can use SRB2Kart to run a SRB2Kart dedicated netgame server given the proper config.
+A containerized version of [SRB2Kart](https://mb.srb2.org/showthread.php?t=43708), a kart racing mod based on the 3D Sonic the Hedgehog fangame [Sonic Robo Blast 2](https://srb2.org/), which is based on a modified version of [Doom Legacy](http://doomlegacy.sourceforge.net/). You can use it to run a dedicated SRB2Kart netgame server.
 
 ## Usage
 
-To start the SRB2Kart dedicated netgame server on port `5029/udp`:
+To start the SRB2Kart dedicated netgame server on port `5029/udp`, run:
 
 ```shell
 docker run --name srb2kart-server -p 5029:5029/udp docker.io/rwanyoike/srb2kart-server:latest
@@ -25,9 +25,9 @@ docker run --name srb2kart-server -p 5029:5029/udp docker.io/rwanyoike/srb2kart-
 
 ### Data Directory
 
-The `~/.srb2kart` directory is symlinked to `/data` inside the container. You can mount a directory on your host (with configuration files, mods, etc.) to the `/data` directory in the container.
+The `~/.srb2kart` directory is linked to `/data` inside the container. You can mount a directory from your host (containing configuration files, mods, etc.) to the `/data` directory in the container.
 
-[For example](https://github.com/rwanyoike/gamersnights-srb2kart/tree/main/data), you can create a directory on your host with the necessary configuration files and mods, and then mount it to the `/data` directory in the container.
+For example, create a directory on your host with the necessary files:
 
 ```shell
 $ tree host-srb2kart-data/
@@ -41,7 +41,9 @@ host-srb2kart-data
 1 directory, 4 files
 ```
 
-> The container runs as a non-root user `1000:1000` (`id:group`, respectively). The directory you mount must be writable by this user.
+> The container runs as a non-root user `1000:1000`. Ensure the mounted directory is writable by this user.
+
+To run the server with your custom data, use:
 
 ```shell
 docker run --name srb2kart-server \
@@ -57,13 +59,13 @@ docker run --name srb2kart-server \
 
 ## Build
 
-The build will clone the [STJr/Kart-Public](https://github.com/STJr/Kart-Public) repository and build the SRB2Kart executable, as well as download the game assets (`/usr/share/games/SRB2Kart`):
+To build the container, follow these steps:
 
 ```shell
 # Clone the repository
 git clone https://github.com/rwanyoike/srb2kart-server-docker
 # Navigate to the project directory
 cd srb2kart-server-docker
-# Build the SRB2Kart server
+# Build the container
 docker build -t srb2kart-server:<version> .
 ```
