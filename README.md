@@ -9,9 +9,7 @@
 
 > Containerized version of SRB2Kart.
 
-<p align="center">
-  <img src="assets/unknown.jpg" alt="SRB2Kart">
-</p>
+![SRB2Kart](assets/unknown.jpg)
 
 A containerized version of [SRB2Kart](https://mb.srb2.org/showthread.php?t=43708), a kart racing mod based on the 3D Sonic the Hedgehog fangame [Sonic Robo Blast 2](https://srb2.org/), which is based on a modified version of [Doom Legacy](http://doomlegacy.sourceforge.net/). You can use it to run a dedicated SRB2Kart netgame server.
 
@@ -50,6 +48,7 @@ docker run --name srb2kart-server \
     -p 5029:5029/udp \
     -v ./host-srb2kart-data:/data \
     docker.io/rwanyoike/srb2kart-server:latest \
+    srb2kart \
     -dedicated \
     -file \
     addons/kl_xxx.pk3 \
